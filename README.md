@@ -1,6 +1,6 @@
 # elgoog / searchme
 
-This is a kernel pwnable for Windows 10. Exploit works on RS4.
+This is a kernel pwnable for Windows 10. Exploit works on RS4 with medium integrity. In RS3 low integrity was enough, because HMValidateHandle could be used to leak palette object addresses.
 
 It was called "elgoog2" at 34C3 CTF, but had an unintended bug. Brought back for WCTF 2018, as "searchme".
 
