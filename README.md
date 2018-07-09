@@ -2,7 +2,7 @@
 
 This is a kernel pwnable for Windows 10. Exploit works on RS4.
 
-It was called "elgoog2" at 34C3 CTF, but had an uninteded bug. Brought back for WCTF 2018, as "searchme".
+It was called "elgoog2" at 34C3 CTF, but had an unintended bug. Brought back for WCTF 2018, as "searchme".
 
 We have a vulnerable kernel driver that deals with document indexing. It lets
 you build an inverted index by adding documents incrementally to an index, and
