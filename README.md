@@ -44,4 +44,4 @@ privileges, which allows us to inject code into `winlogon.exe`.
 [2]: https://github.com/niklasb/elgoog/blob/master/searchme/index.c#L124
 [3]: https://github.com/niklasb/elgoog/blob/master/searchme/index.c#L172
 [4]: https://github.com/niklasb/elgoog/blob/master/searchme/index.c#L213
-[5]: https://github.com/niklasb/elgoog/blob/master/searchme_pwn/pwn.cpp#L242
+[5]: https://github.com/niklasb/elgoog/blob/master/searchme_pwn/pwn.cpp#L193
